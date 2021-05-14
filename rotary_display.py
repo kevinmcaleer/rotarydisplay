@@ -1,12 +1,19 @@
 # Rotary Menu
+# Kevin McAleer
+# May 2021
+
 from machine import Pin, I2C
 from os import listdir
 from ssd1306 import SSD1306_I2C
 from time import sleep
 
+# I2C variables
 id = 0
 sda = Pin(0)
 scl = Pin(1)
+i2c = I2C(id=id, scl=scl, sda=sda)
+
+# Screen Variables
 width = 128
 height = 64
 line = 1 
@@ -14,10 +21,7 @@ highlight = 1
 shift = 0
 list_length = 0
 
-i2c = I2C(id=id, scl=scl, sda=sda)
-
-print("i2c scan - ", i2c.scan())
-
+# create the display
 oled = SSD1306_I2C(width=width, height=height, i2c=i2c)
 oled.init_display()
 
@@ -33,6 +37,7 @@ button_down = False
 
 def get_files():
     """ Get a list of Python files in the root folder of the Pico """
+    
     files = listdir()
     menu = []
     for file in files:
@@ -45,6 +50,7 @@ def get_files():
 def show_menu(menu):
     """ Shows the menu on the screen"""
     
+    # bring in the global variables
     global line, highlight, shift, list_length
 
     # menu variables
@@ -65,11 +71,9 @@ def show_menu(menu):
             oled.fill_rect(1,(line-1)*line_height, width,line_height,1)
             oled.text(">",1, (line-1)*line_height,0)
             oled.text(item, 10, (line-1)*line_height,0)
-            # print(line, "true", shift, highlight)
             oled.show()
         else:
             oled.text(item, 10, (line-1)*line_height,1)
-            # print(line, "false", shift, highlight)
             oled.show()
         line += 1 
     oled.show()
@@ -128,6 +132,3 @@ while True:
     # Decbounce button
     if button_pin.value() == True and button_down:
         button_down = False
-
-    
-    
