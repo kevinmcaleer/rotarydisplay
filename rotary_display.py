@@ -20,6 +20,7 @@ line = 1
 highlight = 1
 shift = 0
 list_length = 0
+total_lines = 6
 
 # create the display
 oled = SSD1306_I2C(width=width, height=height, i2c=i2c)
@@ -57,19 +58,18 @@ def show_menu(menu):
     item = 1
     line = 1
     line_height = 10
-    print("highlight", highlight, "Shift ",shift)
 
     # clear the display
     oled.fill_rect(0,0,width,height,0)
 
     # Shift the list of files so that it shows on the display
     list_length = len(menu)
-    short_list = menu[shift:shift+6]
+    short_list = menu[shift:shift+total_lines]
 
     for item in short_list:
         if highlight == line:
-            oled.fill_rect(1,(line-1)*line_height, width,line_height,1)
-            oled.text(">",1, (line-1)*line_height,0)
+            oled.fill_rect(0,(line-1)*line_height, width,line_height,1)
+            oled.text(">",0, (line-1)*line_height,0)
             oled.text(item, 10, (line-1)*line_height,0)
             oled.show()
         else:
@@ -111,10 +111,10 @@ while True:
 
             # Turned Right
             else:
-                if highlight < 6:
+                if highlight < total_lines:
                     highlight += 1
                 else: 
-                    if shift+6 < list_length:
+                    if shift+total_lines < list_length:
                         shift += 1
 
             show_menu(file_list)
@@ -124,11 +124,13 @@ while True:
     if button_pin.value() == False and not button_down:
         button_down = True
 
-        print("button pushed") 
+        print("Launching", file_list[highlight-1+shift]) 
 
         # execute script
         launch(file_list[(highlight-1) + shift])
         
+        print("Returned from launch")
+
     # Decbounce button
     if button_pin.value() == True and button_down:
         button_down = False
