@@ -60,7 +60,7 @@ def show_menu(menu):
     line_height = 10
 
     # clear the display
-    oled.fill_rect(0,0,WIDTH,HEIGHT,0)
+    oled.fill(0)
 
     # Shift the list of files so that it shows on the display
     list_length = len(menu)
@@ -71,10 +71,8 @@ def show_menu(menu):
             oled.fill_rect(0,(line-1)*line_height, WIDTH,line_height,1)
             oled.text(">",0, (line-1)*line_height,0)
             oled.text(item, 10, (line-1)*line_height,0)
-            oled.show()
         else:
             oled.text(item, 10, (line-1)*line_height,1)
-            oled.show()
         line += 1
     oled.show()
 
@@ -83,7 +81,7 @@ def launch(filename):
     """ Launch the Python script <filename> """
     global file_list
     # clear the screen
-    oled.fill_rect(0,0,WIDTH,HEIGHT,0)
+    oled.fill(0)
     oled.text("Launching", 1, 10)
     oled.text(filename,1, 20)
     oled.show()
